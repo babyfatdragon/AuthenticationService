@@ -9,16 +9,24 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import lombok.Getter;
+
+/**
+ * 
+ * @author li_zh
+ *
+ */
 @Entity
 @Table(name = "CST_BASE")
 @NamedQueries({
-	@NamedQuery(name = User.FIND_BY_ML_ADDRESS_AND_PASSWORD, query = "select u From CST_BASE u WHERE u.ml_address = :mlAddress AND u.password = :password")
+	@NamedQuery(name = User.FIND_BY_ML_ADDRESS_AND_PASSWORD, query = "SELECT u FROM CST_BASE u WHERE u.ml_address = :mlAddress AND u.password = :password"),
+	@NamedQuery(name = User.FIND_ALL, query = "select u FROM CST_BASE u ORDER BY u.cstId ASC")
 })
 public class User {
 
 	public static final String FIND_BY_ML_ADDRESS_AND_PASSWORD = "User.findByMlAddressAndPassword";
-
-	@Id
+	public static final String FIND_ALL = "User.findAll";
+	@Getter @Id
 	@Column(name = "CST_ID")
 	private long cstId;
 	
