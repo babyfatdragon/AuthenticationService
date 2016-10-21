@@ -9,9 +9,10 @@
 	<name>AuthenticationService</name>
 	
 	<properties>
+	  	<version.war.plugin>2.6</version.war.plugin>
+	  	<version.compiler.plugin>3.5.1</version.compiler.plugin>
   		<version.javaee>7.0</version.javaee>
 	  	<version.jersey>2.23.2</version.jersey>
-	  	<version.war.plugin>2.6</version.war.plugin>
 	  	<version.junit>3.8.1</version.junit>
 	  	<version.jose4j>0.5.2</version.jose4j>
 	  	<version.lombok>1.16.10</version.lombok>
@@ -51,6 +52,13 @@
 		    <artifactId>jersey-container-servlet</artifactId>
 		    <version>${version.jersey}</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.osgi/org.osgi.core -->
+		<dependency>
+		    <groupId>org.osgi</groupId>
+		    <artifactId>org.osgi.core</artifactId>
+		    <version>6.0.0</version>
+		</dependency>
+		
 		<dependency>
 		  <groupId>org.bitbucket.b_c</groupId>
 		  <artifactId>jose4j</artifactId>
@@ -82,6 +90,15 @@
 	<build>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${version.compiler.plugin}</version>
+		        	<configuration>
+			          <source>1.8</source>
+			          <target>1.8</target>
+			        </configuration>			
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-war-plugin</artifactId>

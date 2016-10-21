@@ -8,6 +8,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import jp.co.workscm.ec.AuthenticationService.filter.JWTRequired;
+
 /**
  * 
  * @author li_zh
@@ -24,6 +26,7 @@ public class EchoEndPoint {
 	
 	@GET
 	@Path("/jwt")
+	@JWTRequired
 	public Response echoWithJWT(@QueryParam("message") String message) {
 		return Response.ok().entity(message == null ? "no message" : message).build();
 	}

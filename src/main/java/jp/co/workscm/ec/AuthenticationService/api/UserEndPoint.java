@@ -24,7 +24,6 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.jose4j.jwk.RsaJsonWebKey;
-import org.jose4j.jwk.RsaJwkGenerator;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
@@ -32,6 +31,7 @@ import org.jose4j.lang.JoseException;
 
 import jp.co.workscm.ec.AuthenticationService.entity.User;
 import jp.co.workscm.ec.AuthenticationService.util.PasswordUtil;
+import jp.co.workscm.ec.AuthenticationService.util.SimpleKeyGenerator;
 
 /**
  * 
@@ -44,6 +44,7 @@ import jp.co.workscm.ec.AuthenticationService.util.PasswordUtil;
 public class UserEndPoint {
 	@Context
 	private UriInfo uriInfo;
+	
 	@Inject
 	private EntityManager em;
 	
@@ -112,7 +113,7 @@ public class UserEndPoint {
 	}
 	
 	private String issueToken(String mlAddress) throws JoseException {
-		RsaJsonWebKey rsaJsonWebKey = RsaJwkGenerator.generateJwk(2048);
+		RsaJsonWebKey rsaJsonWebKey = SimpleKeyGenerator.INSTANCE.getKey();
 		rsaJsonWebKey.setKeyId("k1");
 		JwtClaims claims = new JwtClaims();
 		claims.setGeneratedJwtId();
