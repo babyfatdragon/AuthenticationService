@@ -2,18 +2,20 @@ package jp.co.workscm.ec.AuthenticationService.api;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
+
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -45,7 +47,7 @@ public class UserEndPoint {
 	@Context
 	private UriInfo uriInfo;
 	
-	@Inject
+	@PersistenceContext
 	private EntityManager em;
 	
 	@POST
@@ -53,7 +55,7 @@ public class UserEndPoint {
 		em.persist(user);
 		return Response.created(uriInfo
 				.getAbsolutePathBuilder()
-				.path(String.valueOf(user.getCstId())).build())
+				.path(String.valueOf(user.getId())).build())
 				.build();
 	}
 	
@@ -70,7 +72,7 @@ public class UserEndPoint {
 	@DELETE
 	@Path("/{id}")
 	public Response remove(@PathParam("id") String id) {
-		em.remove(em.getReference(User.class, id));
+		em.remove(em.getReference(UserEndPoint.class, id));
 		return Response.noContent().build();
 	}
 	
@@ -86,15 +88,15 @@ public class UserEndPoint {
 
 	@POST
 	@Path("/login")
-	@Produces(APPLICATION_JSON)
-	public Response login(@HeaderParam("mlAddress") String mlAddress, 
-			@HeaderParam("password") String password) {
-		if(mlAddress==null || mlAddress=="") {
+	@Consumes(APPLICATION_FORM_URLENCODED)
+	public Response login(@FormParam("username") String username, 
+			@FormParam("password") String password) {
+		if(username==null || username=="") {
 			return Response.status(Status.PRECONDITION_FAILED).build();
 		}
 		try {
-			//authenticate(mlAddress, password);	
-			String jwt = issueToken(mlAddress);
+			authenticate(username, password);	
+			String jwt = issueToken(username);
 			return Response.ok().header(AUTHORIZATION, "Bearer " + jwt) .build();	
 		} catch (Exception e) {
 			return Response.status(UNAUTHORIZED).build();

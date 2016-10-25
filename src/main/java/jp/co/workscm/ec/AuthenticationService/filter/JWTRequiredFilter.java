@@ -12,7 +12,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 import org.jose4j.jwk.RsaJsonWebKey;
-import org.jose4j.jwk.RsaJwkGenerator;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.jwt.consumer.JwtConsumer;
@@ -28,16 +27,16 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Provider
 @JWTRequired
-@Slf4j
+//@Slf4j
 public class JWTRequiredFilter implements ContainerRequestFilter {
 	
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		
 		String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-		log.info("authorizationHeader: " + authorizationHeader);
+		//log.info("authorizationHeader: " + authorizationHeader);
 		
 		if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-			log.error("Invalid authorizationHeader");
+			//log.error("Invalid authorizationHeader");
 			throw new NotAuthorizedException("Authorization Header must be provided.");
 		}
 		
@@ -58,12 +57,12 @@ public class JWTRequiredFilter implements ContainerRequestFilter {
 			try {
 				JwtClaims jwtClaims =jwtConsumer.processToClaims(jwt);
 		        System.out.println("JWT validation succeeded! " + jwtClaims);
-				log.info("Valid JWT: " + jwt);
+				//log.info("Valid JWT: " + jwt);
 			} catch (InvalidJwtException e) {
 				System.out.println("Invalid JWT. " + e);
 			}
 		} catch(Exception e) {
-			log.error("Invalid JWT: " + jwt);
+			//log.error("Invalid JWT: " + jwt);
 			requestContext.abortWith(Response.status(UNAUTHORIZED).build());
 		}
 	}

@@ -4,6 +4,9 @@ import org.jose4j.jwk.RsaJsonWebKey;
 import org.jose4j.jwk.RsaJwkGenerator;
 import org.jose4j.lang.JoseException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public enum SimpleKeyGenerator {
 	INSTANCE;
 	private static RsaJsonWebKey rsaJsonWebKey;
@@ -11,8 +14,7 @@ public enum SimpleKeyGenerator {
 		try {
 			rsaJsonWebKey = RsaJwkGenerator.generateJwk(2048);
 		} catch (JoseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Error happens when creating rsaJsonWebKey, JoseException: " + e);
 		}
 	}
 	

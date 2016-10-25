@@ -1,0 +1,1 @@
+INSERT INTO USER (ID, USER_NAME, PASSWORD, FIRST_NAME, LAST_NAME) values ('1', 'quentinada', 'Lm4PZdOzxeuHrUKU26YB4GnwBFViydvjnrOAZH7BhaA=', 'Adam', 'Quentin');
