@@ -26,6 +26,7 @@ public class EchoEndPoint {
 	
 	@GET
 	@Path("/jwt")
+	@Produces(TEXT_PLAIN)
 	@JWTRequired
 	public Response echoWithJWT(@QueryParam("message") String message) {
 		return Response.ok().entity(message == null ? "no message" : message).build();

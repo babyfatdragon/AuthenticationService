@@ -37,7 +37,7 @@ public class EchoEndPointTest {
 	@Deployment
 	public static WebArchive createDeployment() {
 		return ShrinkWrap.create(WebArchive.class)
-				.addClasses(EchoEndPoint.class, ApplicationConfig.class, JWTRequired.class)
+				.addClasses(ApplicationConfig.class, EchoEndPoint.class, JWTRequired.class)
 				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
 	

@@ -1,9 +1,8 @@
 package jp.co.workscm.ec.AuthenticationService.api;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
-
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
@@ -12,6 +11,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -43,15 +43,18 @@ import jp.co.workscm.ec.AuthenticationService.util.SimpleKeyGenerator;
 @Path("/user")
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
+@Transactional
 public class UserEndPoint {
 	@Context
 	private UriInfo uriInfo;
 	
-	@PersistenceContext
+	@PersistenceContext(unitName="userPU")
 	private EntityManager em;
 	
 	@POST
 	public Response create(User user) {
+		user.setPassword(PasswordUtil.digestPassword(user.getPassword()));
+		System.out.println("MIMA " + user.getPassword());
 		em.persist(user);
 		return Response.created(uriInfo
 				.getAbsolutePathBuilder()
@@ -62,7 +65,7 @@ public class UserEndPoint {
 	@GET
 	@Path("/{id}")
 	public Response findById(@PathParam("id") String id) {
-		User user = em.find(User.class, id);
+		User user = em.find(User.class, Long.parseLong(id));
 		if(user == null) {
 			return Response.status(NOT_FOUND).build();
 		}
@@ -72,7 +75,7 @@ public class UserEndPoint {
 	@DELETE
 	@Path("/{id}")
 	public Response remove(@PathParam("id") String id) {
-		em.remove(em.getReference(UserEndPoint.class, id));
+		em.remove(em.getReference(User.class, Long.parseLong(id)));
 		return Response.noContent().build();
 	}
 	
@@ -103,28 +106,28 @@ public class UserEndPoint {
 		}
 	}
 
-	private void authenticate(String mlAddress, String password) {
+	private void authenticate(String username, String password) {
 		// TODO Auto-generated method stub
-		TypedQuery<User> query = em.createNamedQuery(User.FIND_BY_ML_ADDRESS_AND_PASSWORD, User.class);
-		query.setParameter("mlAddress", mlAddress);
-		query.setParameter("password", PasswordUtil.digestPassword(password));
+		TypedQuery<User> query = em.createNamedQuery(User.FIND_BY_USERNAME_AND_PASSWORD, User.class);
+		query.setParameter("username", username);
+		query.setParameter("password", password);
+		//query.setParameter("password", PasswordUtil.digestPassword(password));
 		User user = query.getSingleResult();
 		if(user == null) {
 			throw new SecurityException("Invalid credentials");
 		}
 	}
 	
-	private String issueToken(String mlAddress) throws JoseException {
+	private String issueToken(String username) throws JoseException {
 		RsaJsonWebKey rsaJsonWebKey = SimpleKeyGenerator.INSTANCE.getKey();
 		rsaJsonWebKey.setKeyId("k1");
 		JwtClaims claims = new JwtClaims();
 		claims.setGeneratedJwtId();
-		claims.setSubject(mlAddress);
+		claims.setSubject(username);
 		claims.setIssuer("WORKS APPLICATIONS");
 		claims.setAudience("Audience");
 		claims.setIssuedAtToNow();
 		claims.setExpirationTimeMinutesInTheFuture(10);
-		claims.setClaim("email", "mail@example.com");
 		
 		JsonWebSignature jws = new JsonWebSignature();
 		jws.setPayload(claims.toJson());
