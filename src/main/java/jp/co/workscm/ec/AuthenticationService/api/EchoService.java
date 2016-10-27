@@ -17,7 +17,7 @@ import jp.co.workscm.ec.AuthenticationService.filter.JWTRequired;
  */
 @Path("/echo")
 @Produces(TEXT_PLAIN)
-public class EchoEndPoint {
+public class EchoService {
 	
 	@GET
 	public Response echo(@QueryParam("message") String message) {

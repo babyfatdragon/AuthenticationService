@@ -47,7 +47,7 @@ import jp.co.workscm.ec.AuthenticationService.util.SimpleKeyGenerator;
 
 @RunWith(Arquillian.class)
 @RunAsClient
-public class JWTEchoEndPointTest {
+public class JWTEchoServiceTest {
 
 	private Client client;
 	private WebTarget userTarget;
@@ -63,7 +63,7 @@ public class JWTEchoEndPointTest {
 				.importRuntimeDependencies().resolve().withTransitivity().asFile();
 		
 		return ShrinkWrap.create(WebArchive.class)
-				.addClasses(ApplicationConfig.class, EchoEndPoint.class, UserEndPoint.class, User.class)
+				.addClasses(ApplicationConfig.class, EchoService.class, UserService.class, User.class)
 				.addClasses(JWTRequired.class, JWTRequiredFilter.class)
 				.addClasses(PasswordUtil.class, SimpleKeyGenerator.class, JoseException.class)
 				.addAsResource("META-INF/persistence-test.xml", "META-INF/persistence.xml")

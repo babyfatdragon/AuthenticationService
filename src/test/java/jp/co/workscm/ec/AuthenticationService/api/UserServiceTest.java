@@ -39,7 +39,7 @@ import jp.co.workscm.ec.AuthenticationService.util.PasswordUtil;
 import jp.co.workscm.ec.AuthenticationService.util.SimpleKeyGenerator;
 @RunWith(Arquillian.class)
 @RunAsClient
-public class UserEndPointTest {
+public class UserServiceTest {
 
 	private Client client;
 	private WebTarget userTarget;
@@ -55,7 +55,7 @@ public class UserEndPointTest {
         		.importRuntimeDependencies().resolve().withTransitivity().asFile();
         
         return ShrinkWrap.create(WebArchive.class)
-				.addClasses(ApplicationConfig.class, UserEndPoint.class, User.class)
+				.addClasses(ApplicationConfig.class, UserService.class, User.class)
 				.addClasses(PasswordUtil.class, SimpleKeyGenerator.class, JoseException.class)
 				.addAsResource("META-INF/persistence-test.xml", "META-INF/persistence.xml")
 				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")

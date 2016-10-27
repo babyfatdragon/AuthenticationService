@@ -26,7 +26,7 @@ import jp.co.workscm.ec.AuthenticationService.filter.JWTRequired;
 
 @RunWith(Arquillian.class)
 @RunAsClient
-public class EchoEndPointTest {
+public class EchoServiceTest {
 	
 	private Client client;
 	private WebTarget echoTarget;
@@ -37,7 +37,7 @@ public class EchoEndPointTest {
 	@Deployment
 	public static WebArchive createDeployment() {
 		return ShrinkWrap.create(WebArchive.class)
-				.addClasses(ApplicationConfig.class, EchoEndPoint.class, JWTRequired.class)
+				.addClasses(ApplicationConfig.class, EchoService.class, JWTRequired.class)
 				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
 	

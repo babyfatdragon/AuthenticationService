@@ -44,7 +44,7 @@ import jp.co.workscm.ec.AuthenticationService.util.SimpleKeyGenerator;
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
 @Transactional
-public class UserEndPoint {
+public class UserService {
 	@Context
 	private UriInfo uriInfo;
 	
@@ -110,8 +110,7 @@ public class UserEndPoint {
 		// TODO Auto-generated method stub
 		TypedQuery<User> query = em.createNamedQuery(User.FIND_BY_USERNAME_AND_PASSWORD, User.class);
 		query.setParameter("username", username);
-		query.setParameter("password", password);
-		//query.setParameter("password", PasswordUtil.digestPassword(password));
+		query.setParameter("password", PasswordUtil.digestPassword(password));
 		User user = query.getSingleResult();
 		if(user == null) {
 			throw new SecurityException("Invalid credentials");
